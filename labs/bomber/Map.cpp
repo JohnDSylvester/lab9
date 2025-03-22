@@ -77,8 +77,6 @@ std::string Map::route(Point src, Point dst){
 	
 
 	while(!openSet.empty()) {
-		std::vector<Point> bombCords;
-                std::vector<Point> brokenWallCords;
 
 		State current = openSet.top().s;
 		openSet.pop();

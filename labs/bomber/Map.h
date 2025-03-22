@@ -62,6 +62,8 @@ class Map {
 	int width = 0;
 	std::map<char, Point> directions = {{'e', Point(0, 1)}, {'w', Point(0, -1)}, {'s', Point(1,0)}, {'n', Point(-1, 0)}}; 
 	int numberOfBombs = 0;
+	std::vector<Point> bombCords;
+        std::vector<Point> brokenWallCords;
 	bool walkable(int lati, int longi);
 	void addEdge(Point key, Point neighbor, char d);
 	std::vector<moveWithDirection> getNeighbors(Point current);
