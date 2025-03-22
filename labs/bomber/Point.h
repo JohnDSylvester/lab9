@@ -25,5 +25,6 @@ struct Point {
 // Operators for easier (and consistent) input and output:
 std::ostream& operator << (std::ostream& stream, const Point& point);
 std::istream& operator >> (std::istream& stream, Point& point);
+bool operator==(const Point& other, const Point& current);
 
 #endif
