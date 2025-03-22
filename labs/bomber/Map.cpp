@@ -61,16 +61,40 @@ std::string Map::route(Point src, Point dst){
 	std::unordered_map<State, int, hashState> gScore;
 	std::unordered_map<State, int, hashState> fScore;
 	std::unordered_set<State, hashState> visited;
+	
+	bool bombAtStart = false;
 
-	openSet.push(stateWithScore(State(src, 0), 0));
+	if(stringMap[src.lat][src.lng] != '*'){
+		openSet.push(stateWithScore(State(src, 0), 0));
+	}
+	else{
+		bombAtStart = true;
+		openSet.push(stateWithScore(State(src, 1), 0));
+		stringMap[src.lat][src.lng] = '.';
+	}
 	gScore[State(src, 0)] = 0;
 	fScore[State(src, 0)] = heuristic(src, dst);
+	
 
 	while(!openSet.empty()) {
+		std::vector<Point> bombCords;
+                std::vector<Point> brokenWallCords;
+
 		State current = openSet.top().s;
 		openSet.pop();
 
 		if(current.position == dst){
+			for(Point& bomb : bombCords){
+                                stringMap[bomb.lat][bomb.lng] = '*';
+                        }
+
+                	bombCords.clear();
+
+                	for(Point& wall : brokenWallCords){
+                        	stringMap[wall.lat][wall.lng] = '#';
+                	}
+
+                	brokenWallCords.clear();
 			return displayPath(previous, current);
 		}
 
@@ -80,6 +104,11 @@ std::string Map::route(Point src, Point dst){
 		visited.insert(current);
 
 		std::vector<moveWithDirection> neighbors = getNeighbors(current.position);
+		
+		if(bombAtStart){
+			bombCords.push_back(src);
+			bombAtStart = 0;
+		}
 
 		for(const moveWithDirection& neighbor : neighbors){
 			Point neighborPoint = neighbor.pos;
@@ -115,13 +144,11 @@ std::string Map::route(Point src, Point dst){
 				openSet.push(stateWithScore(State(neighborPoint, bombs, direction), fScore[nextState]));
 			}
 		} 
-		revertChanges();
 	}
-	
 	throw(RouteError(src, dst));
 }
 
-void Map::revertChanges(){
+void Map::revertChanges(std::vector<Point> bombCords, std::vector<Point> brokenWallCords){
 	for(Point& bomb : bombCords){
 		stringMap[bomb.lat][bomb.lng] = '*';
 	} 
@@ -144,7 +171,6 @@ std::string Map::displayPath(const std::unordered_map<State, State, hashState> p
 		current = previous.at(current);
 	}
 	std::reverse(path.begin(), path.end());
-	revertChanges();
 	return path;
 }
 

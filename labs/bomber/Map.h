@@ -60,15 +60,13 @@ class Map {
 	std::vector<std::string> stringMap;
 	int length = 0;
 	int width = 0;
-	std::vector<Point> bombCords; 
-    	std::vector<Point> brokenWallCords;
 	std::map<char, Point> directions = {{'e', Point(0, 1)}, {'w', Point(0, -1)}, {'s', Point(1,0)}, {'n', Point(-1, 0)}}; 
 	int numberOfBombs = 0;
 	bool walkable(int lati, int longi);
 	void addEdge(Point key, Point neighbor, char d);
 	std::vector<moveWithDirection> getNeighbors(Point current);
 	int heuristic(const Point& current, const Point& goal);
-	void revertChanges();
+	void revertChanges(std::vector<Point> bombCords, std::vector<Point> brokenWallCords);
 	std::string displayPath(const std::unordered_map<State, State, hashState> previous, State current);
 public:
     Map(std::istream& stream);
