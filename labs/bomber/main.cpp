@@ -2,8 +2,8 @@
 #include <iostream>
 //#include "Map.cpp"
 #include "Errors.h"
-#include "Map.h"
-//#include "Point.cpp"
+//#include "Map.h"
+#include "Point.cpp"
 
 int main(int argc, char** argv) {
   bool interactive = false;

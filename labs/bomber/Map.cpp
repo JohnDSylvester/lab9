@@ -61,14 +61,12 @@ std::string Map::route(Point src, Point dst){
 	std::unordered_map<State, int, hashState> gScore;
 	std::unordered_map<State, int, hashState> fScore;
 	std::unordered_set<State, hashState> visited;
-	
-	bool bombAtStart = false;
 
 	if(stringMap[src.lat][src.lng] != '*'){
 		openSet.push(stateWithScore(State(src, 0), 0));
 	}
 	else{
-		bombAtStart = true;
+		bombCords.push_back(src);
 		openSet.push(stateWithScore(State(src, 1), 0));
 		stringMap[src.lat][src.lng] = '.';
 	}
@@ -102,11 +100,6 @@ std::string Map::route(Point src, Point dst){
 		visited.insert(current);
 
 		std::vector<moveWithDirection> neighbors = getNeighbors(current.position);
-		
-		if(bombAtStart){
-			bombCords.push_back(src);
-			bombAtStart = 0;
-		}
 
 		for(const moveWithDirection& neighbor : neighbors){
 			Point neighborPoint = neighbor.pos;
