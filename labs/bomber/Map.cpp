@@ -49,7 +49,7 @@ Map::Map(std::istream& stream){
 }
 
 std::string Map::route(Point src, Point dst){
-	if(src.lat >= length || src.lng >= width || src.lat < 0 || src.lng < 0){
+	if(src.lat >= length || src.lng >= width || src.lat < 0 || src.lng < 0 || stringMap[src.lat][src.lng] == '#' || stringMap[src.lat][src.lng] == '~'){
                 throw(PointError(src));
 	}
 	else if(dst.lat >= length || dst.lng >= width || dst.lat < 0 || dst.lng < 0){
@@ -138,7 +138,9 @@ void Map::revertChanges(){
 std::string Map::displayPath(const std::unordered_map<State, State, hashState> previous, State current){
 	std::string path = "";
 	while(previous.find(current) != previous.end()){
+		if(current.lastMove != ' '){
 		path += current.lastMove;
+		}
 		current = previous.at(current);
 	}
 	std::reverse(path.begin(), path.end());
